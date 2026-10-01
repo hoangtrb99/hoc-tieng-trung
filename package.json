@@ -1,0 +1,25 @@
+{
+  "name": "hoc-tieng-trung",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "App ca nhan hoc tieng Trung: phien am (pinyin) + tu vung spaced repetition",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "single": "npm run build && node scripts/inline.mjs"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.3"
+  }
+}
