@@ -1,18 +1,14 @@
-import type { Example, Lesson } from '../../types';
+import type { Lesson } from '../../types';
 import { useAppState } from '../../hooks/useStore';
 import { speak } from '../../lib/speech';
-import { strip } from '../../lib/pinyin';
 import { ColorPinyin, ToneContourSvg } from '../../components/Pinyin';
 import { SpeakerIcon } from '../../components/Icons';
 
 const LABEL_ONLY_RE = /thanh|hông|Có|đứng|Sau/;
 const MA_TONES: [string, string][] = [['mā', '妈'], ['má', '麻'], ['mǎ', '马'], ['mà', '骂']];
 
-// Nhung nguyen am don (va er) doc duoc rieng mot minh; phu am dau hay van mau ghep
-// (ai, an, ang, ua...) khong doc tach roi duoc nen van dung tu vi du dau tien.
-const BARE_FINALS = new Set(['a', 'e', 'i', 'o', 'u', 'ü', 'er']);
-
-/** Bo phan chu thich trong ngoac o cuoi nhan, vd "ā  (thanh 1)" -> "ā". */
+/** Bo phan chu thich trong ngoac o cuoi nhan, vd "ā  (thanh 1)" -> "ā", chi dung de
+ * QUYET DINH co to mau pinyin hay khong - khong anh huong am thanh phat ra. */
 function coreLabel(label: string): string {
   return label.replace(/\s*\(.*$/, '').trim();
 }
@@ -21,15 +17,6 @@ function coreLabel(label: string): string {
  * phan cot loi sau khi bo chu thich - tranh nham "ā  (thanh 1)" voi cac nhan nhu "Sau thanh 3". */
 function isDescriptiveLabel(core: string): boolean {
   return LABEL_ONLY_RE.test(core);
-}
-
-/** Am thanh cho nut loa o dau the: neu nhan la 1 nguyen am don (co the kem dau thanh,
- * vi du "ā  (thanh 1)") thi doc dung nguyen am do; con lai (phu am, van mau ghep,
- * mo ta quy tac) thi doc tu vi du dau tien nhu truoc. */
-function iconSpeakTarget(core: string, isDescriptive: boolean, examples?: Example[]): string {
-  if (!examples?.length) return '';
-  if (!isDescriptive && BARE_FINALS.has(strip(core))) return core;
-  return examples[0].h;
 }
 
 export function LearnTab({ lesson, onNext, hasGrid }: { lesson: Lesson; onNext: () => void; hasGrid: boolean }) {
@@ -60,7 +47,7 @@ export function LearnTab({ lesson, onNext, hasGrid }: { lesson: Lesson; onNext: 
                   <div className={`sym${t.s.length > 7 ? ' long' : ''}`}>
                     <span>{descriptive ? t.s : <ColorPinyin text={t.s} />}</span>
                     {t.a && (
-                      <button className="spkbtn" onClick={() => speak(iconSpeakTarget(core, descriptive, t.a), s.slow)} aria-label="Nghe âm này" type="button">
+                      <button className="spkbtn" onClick={() => speak(t.a![0].h, s.slow)} aria-label="Nghe ví dụ" type="button">
                         <SpeakerIcon className="spk" />
                       </button>
                     )}
