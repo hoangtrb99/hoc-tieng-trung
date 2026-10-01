@@ -7,6 +7,14 @@ import { SpeakerIcon } from '../../components/Icons';
 const LABEL_ONLY_RE = /thanh|hông|Có|đứng|Sau/;
 const MA_TONES: [string, string][] = [['mā', '妈'], ['má', '麻'], ['mǎ', '马'], ['mà', '骂']];
 
+// Nut loa dau the "f" muon nghe am mau goc phang (thanh 1), giong kieu b/p/m da san co tu
+// vi du bō/pō/mō (từ 波/坡/摸). Tieng Trung khong co chu thong dung nao doc la "fō" (thanh 1)
+// nen phai doc thang pinyin thay vi chu Han - da kiem tra thuc te, nghe dung. Chi ap dung cho
+// dung "f", khong suy rong ra cac phu am khac vi chua kiem chung.
+const ICON_AUDIO_OVERRIDE: Record<string, string> = {
+  f: 'fō',
+};
+
 /** Bo phan chu thich trong ngoac o cuoi nhan, vd "ā  (thanh 1)" -> "ā", chi dung de
  * QUYET DINH co to mau pinyin hay khong - khong anh huong am thanh phat ra. */
 function coreLabel(label: string): string {
@@ -47,7 +55,7 @@ export function LearnTab({ lesson, onNext, hasGrid }: { lesson: Lesson; onNext: 
                   <div className={`sym${t.s.length > 7 ? ' long' : ''}`}>
                     <span>{descriptive ? t.s : <ColorPinyin text={t.s} />}</span>
                     {t.a && (
-                      <button className="spkbtn" onClick={() => speak(t.a![0].h, s.slow)} aria-label="Nghe ví dụ" type="button">
+                      <button className="spkbtn" onClick={() => speak(ICON_AUDIO_OVERRIDE[t.s] ?? t.a![0].h, s.slow)} aria-label="Nghe ví dụ" type="button">
                         <SpeakerIcon className="spk" />
                       </button>
                     )}
